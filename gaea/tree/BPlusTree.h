@@ -34,20 +34,22 @@ public:
 
     bool IsEmpty() const;
 
+    Record<V>* Find(const K& key);
+
     //may be update
     void Insert(const K& key, const V& value);
 
-    void Remove(const K& key);
+//    void Remove(const K& key);
 
-    //after this function has been called, you could still call Insert to build a new tree
+    //after this function has been called, you could still call InsertOrUpdate to build a new tree
     void DestroyTree();
-
-    LeafNode<K, V>* FindLeaf(const K& k);
 
     DISALLOW_COPY_AND_ASSIGN(BPlusTree);
 
 private:
     void NewTree(const K& key, const V& value);
+
+    LeafNode<K, V>* FindLeaf(const K& k);
 
     void InsertIntoLeaf(const K& key, const V& value);
 
@@ -74,6 +76,21 @@ BPlusTree<K, V>::~BPlusTree()
 }
 
 template <typename K, typename V>
+Record<V>* BPlusTree<K, V>::Find(const K& key)
+{
+    if (IsEmpty())
+    {
+        return nullptr;
+    }
+    LeafNode<K, V>* leaf = FindLeaf(key);
+    if (!leaf)
+    {
+        return nullptr;
+    }
+    return leaf->Lookup(key);
+}
+
+template <typename K, typename V>
 bool BPlusTree<K, V>::IsEmpty() const
 {
     return !root_;
@@ -92,11 +109,11 @@ void BPlusTree<K, V>::Insert(const K& key, const V& value)
     }
 }
 
-template <typename K, typename V>
-void BPlusTree<K, V>::Remove(const K& key)
-{
-    //TODO
-}
+//template <typename K, typename V>
+//void BPlusTree<K, V>::Remove(const K& key)
+//{
+//    //TODO
+//}
 
 template <typename K, typename V>
 void BPlusTree<K, V>::DestroyTree()

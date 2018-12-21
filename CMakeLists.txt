@@ -47,9 +47,11 @@ set(SOURCE_FILES
 #add_executable(gaea_simple examples/main.cc)
 #target_link_libraries(gaea_simple gaea)
 
-add_executable(avl_test gaea/tree/test/AVLTreeTest.cc gaea/tree/AVLTree.h)
+add_executable(avl_test gaea/tree/test/AVLTreeTest.cc)
 
-add_executable(bplus_test gaea/tree/test/BTreeTest.cc gaea/tree/BPlusTree.h)
+add_executable(bplus_test gaea/tree/test/BTreeTest.cc)
+
+add_executable(bplus_map_test gaea/db/test/BPlusMapTest.cc)
 
 #add_executable(btree_unittest gaea/tree/test/BTreeTest.cc)
 #target_link_libraries(btree_unittest gaea boost_unit_test_framework)

@@ -7,7 +7,7 @@
 
 using namespace gaea;
 
-//check Insert and Rotate
+//check InsertOrUpdate and Rotate
 //https://www.cnblogs.com/skywang12345/p/3577360.html
 
 int main()
