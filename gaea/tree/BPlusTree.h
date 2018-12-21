@@ -8,7 +8,7 @@
 #include <string>
 #include <sstream>
 #include <gaea/tree/BPlusException.h>
-#include <gaea/util.h>
+#include <gaea/utils/noncopyable.h>
 #include <gaea/tree/BPlusNode.h>
 
 namespace gaea
@@ -109,10 +109,11 @@ void BPlusTree<K, V>::Insert(const K& key, const V& value)
     }
 }
 
+//TODO
 //template <typename K, typename V>
 //void BPlusTree<K, V>::Remove(const K& key)
 //{
-//    //TODO
+//
 //}
 
 template <typename K, typename V>
