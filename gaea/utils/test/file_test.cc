@@ -12,5 +12,6 @@ int main()
     std::string content;
     int64_t a, b, c;
     file.ReadToString(100, &content, &a, &b, &c);
+    file_util::ReadFile("/home/xi/img.jpg", 100, &content);
     return 0;
 }

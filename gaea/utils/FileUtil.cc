@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <assert.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gaea/utils/FileUtil.h>
@@ -101,6 +102,7 @@ int ReadSmallFile::ReadToBuffer(int* size)
     int err = err_;
     if (fd_ >= 0)
     {
+        //atomic and will not change file offset
         ssize_t n = ::pread(fd_, buf_, sizeof(buf_) - 1, 0);
         if (n >= 0)
         {
@@ -120,6 +122,53 @@ int ReadSmallFile::ReadToBuffer(int* size)
 
 //explicit instantiation
 template int ReadSmallFile::ReadToString(int max_size, std::string* content, int64_t *file_size, int64_t *modify_time, int64_t *create_time);
+
+AppendFile::AppendFile(const std::string& filename) :
+    fp_(::fopen(filename.c_str(), "ae")), //'e' for O_CLOEXEC
+    written_bytes_(0)
+{
+    assert(fp_);
+    ::setbuffer(fp_, buffer_, sizeof(buffer_));
+}
+
+AppendFile::~AppendFile()
+{
+    ::fclose(fp_);
+}
+
+void AppendFile::Append(const char* content, size_t len)
+{
+    size_t n = Write(content, len);
+    size_t remain = len - n;
+    while (remain > 0)
+    {
+        size_t x = Write(content + n, remain);
+        if (x == 0)
+        {
+            int err = ferror(fp_);
+            if (err)
+            {
+                fprintf(stderr, "AppendFile::Append() failed %s\n", strerror(err));
+            }
+            break;
+        }
+        n += x;
+        remain -= x;
+    }
+    written_bytes_ += len;
+}
+
+void AppendFile::Flush()
+{
+    ::fflush(fp_);
+}
+
+size_t AppendFile::Write(const char* content, size_t len)
+{
+    return ::fwrite_unlocked(content, 1, len, fp_);
+}
+
+template int ReadFile(const std::string& filename, int max_size, std::string* content, int64_t*, int64_t*, int64_t*);
 
 } //namespace file_util
 } //namespace gaea
