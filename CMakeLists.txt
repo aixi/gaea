@@ -46,15 +46,18 @@ add_library(gaea SHARED ${SOURCE_FILES})
 #add_executable(gaea_simple examples/main.cc)
 #target_link_libraries(gaea_simple gaea)
 
-add_executable(avl_test gaea/tree/test/AVLTreeTest.cc)
+add_executable(avl_test gaea/tree/tests/AVLTreeTest.cc)
 
-add_executable(bplus_test gaea/tree/test/BTreeTest.cc)
+add_executable(bplus_test gaea/tree/tests/BTreeTest.cc)
+add_test(NAME bplus_test COMMAND bplus_test)
 
-add_executable(bplus_map_test gaea/db/test/BPlusMapTest.cc)
+add_executable(bplus_map_test gaea/db/tests/BPlusMapTest.cc)
 
-add_executable(files_test gaea/utils/test/file_test.cc)
+add_executable(files_test gaea/utils/tests/file_test.cc)
 target_link_libraries(files_test gaea)
 
-#add_executable(btree_unittest gaea/tree/test/BTreeTest.cc)
+add_executable(simple examples/simple.cc)
+
+#add_executable(btree_unittest gaea/tree/tests/BTreeTest.cc)
 #target_link_libraries(btree_unittest gaea boost_unit_test_framework)
 #add_test(NAME btree_unittest COMMAND btree_unittest)

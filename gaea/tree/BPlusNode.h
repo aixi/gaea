@@ -287,7 +287,6 @@ class InternalNode : public Node<K>
 public:
     using MappingType = std::pair<K, Node<K>*>;
 
-    //FIXME: effective C++ 3e item 43
     using Node<K>::Order;
     using Node<K>::Parent;
 
@@ -320,7 +319,6 @@ public:
     Node<K>* Lookup(const K& key) const;
 
     DISALLOW_COPY_AND_ASSIGN(InternalNode);
-
 
 private:
     void CopyHalfFrom(const std::vector<MappingType>& from);
@@ -394,6 +392,7 @@ int InternalNode<K>::InsertNodeAfter(Node<K>* pos_node, const K& new_key, Node<K
 template <typename K>
 K InternalNode<K>::ReplaceAndReturnFirstKey()
 {
+    assert(!mappings_.empty());
     K new_key = mappings_.front().first;
     static_assert(std::is_default_constructible<K>::value, "Key type is not default constructible");
     mappings_.front().first = K();
@@ -410,10 +409,10 @@ void InternalNode<K>::MoveHalfTo(InternalNode<K>* recipient)
 template <typename K>
 void InternalNode<K>::CopyHalfFrom(const std::vector<typename InternalNode<K>::MappingType>& from)
 {
-    for (size_t i = MinSize(); i < mappings_.size(); ++i)
+    for (size_t i = MinSize(); i < from.size(); ++i)
     {
-        mappings_[i].second->SetParent(this);
-        mappings_.push_back(mappings_[i]);
+        from[i].second->SetParent(this);
+        mappings_.push_back(from[i]);
     }
 }
 
@@ -444,7 +443,7 @@ std::string InternalNode<K>::DebugString(bool verbose) const
 {
     if (mappings_.empty())
     {
-        return std::string(""); //may be RVO
+        return std::string(""); //RVO
     }
     std::ostringstream oss;
     if (verbose)

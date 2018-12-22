@@ -22,6 +22,7 @@ namespace bplus
 //内部节点最多children数量比key数量多１满足 k[i+1] > p[i+1] >= k[i]
 //叶子节点最多order - 1个子树，与key的数量相同，第order个指针指向同一层右边兄弟，最右指向nullptr
 //InternalNode::mappings_[0] is a dummy header
+//NOTE: NOT thread safe
 template <typename K, typename V>
 class BPlusTree
 {
