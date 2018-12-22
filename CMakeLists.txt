@@ -39,10 +39,9 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 include_directories("${PROJECT_SOURCE_DIR}")
 
 set(SOURCE_FILES
-        gaea/tree/BPlusTree.h
-        gaea/tree/AVLTree.h)
+        gaea/utils/FileUtil.cc)
 
-#add_library(gaea SHARED ${SOURCE_FILES})
+add_library(gaea SHARED ${SOURCE_FILES})
 
 #add_executable(gaea_simple examples/main.cc)
 #target_link_libraries(gaea_simple gaea)
@@ -52,6 +51,9 @@ add_executable(avl_test gaea/tree/test/AVLTreeTest.cc)
 add_executable(bplus_test gaea/tree/test/BTreeTest.cc)
 
 add_executable(bplus_map_test gaea/db/test/BPlusMapTest.cc)
+
+add_executable(files_test gaea/utils/test/file_test.cc)
+target_link_libraries(files_test gaea)
 
 #add_executable(btree_unittest gaea/tree/test/BTreeTest.cc)
 #target_link_libraries(btree_unittest gaea boost_unit_test_framework)
