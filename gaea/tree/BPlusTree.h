@@ -23,6 +23,7 @@ namespace bplus
 //叶子节点最多order - 1个子树，与key的数量相同，第order个指针指向同一层右边兄弟，最右指向nullptr
 //InternalNode::mappings_[0] is a dummy header
 //NOTE: NOT thread safe
+
 template <typename K, typename V>
 class BPlusTree
 {
@@ -40,7 +41,8 @@ public:
     //may be update
     void Insert(const K& key, const V& value);
 
-//    void Remove(const K& key);
+    //logical remove only
+    void Remove(const K& key);
 
     //after this function has been called, you could still call InsertOrUpdate to build a new tree
     void DestroyTree();
@@ -110,12 +112,21 @@ void BPlusTree<K, V>::Insert(const K& key, const V& value)
     }
 }
 
-//TODO
-//template <typename K, typename V>
-//void BPlusTree<K, V>::Remove(const K& key)
-//{
-//
-//}
+template <typename K, typename V>
+void BPlusTree<K, V>::Remove(const K& key)
+{
+    LeafNode<K, V>* leaf = FindLeaf(key);
+    if (!leaf)
+    {
+        return;
+    }
+    Record<V>* record = leaf->Lookup(key);
+    if (!record)
+    {
+        return;
+    }
+    record->SetDeletion(true);
+}
 
 template <typename K, typename V>
 void BPlusTree<K, V>::DestroyTree()

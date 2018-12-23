@@ -32,6 +32,8 @@ public:
 
     void SetParent(Node* parent);
 
+    void SetDeletion(bool is_deleted);
+
     bool IsRoot() const;
 
     virtual bool IsLeaf() const = 0;
@@ -52,7 +54,8 @@ private:
 };
 
 template<typename K>
-Node<K>::Node(int order) : order_(order)
+Node<K>::Node(int order) :
+    order_(order)
 {
     assert(order_ >= 3);
 }
@@ -81,6 +84,12 @@ void Node<K>::SetParent(Node *parent)
     parent_ = parent;
 }
 
+template <typename K>
+void Node<K>::SetDeletion(bool is_deleted)
+{
+    is_deleted_ = is_deleted;
+}
+
 template<typename K>
 bool Node<K>::IsRoot() const
 {
@@ -98,6 +107,7 @@ public:
     //avoid to many this->Order()
     using Node<K>::Order;
     using Node<K>::Parent;
+    using Node<K>::SetDeletion;
 
     explicit LeafNode(int order);
 
@@ -289,6 +299,7 @@ public:
 
     using Node<K>::Order;
     using Node<K>::Parent;
+    using Node<K>::SetDeletion;
 
     explicit InternalNode(int order);
 
